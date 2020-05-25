@@ -10,8 +10,15 @@ router.get('/', (req, res, next) => {
 
 // Handling POST request for orders
 router.post('/', (req, res, next) => {
+    const { productId, quantity } = req.body;
+    const order = {
+        productId,
+        quantity
+    };
+
     res.status(201).json({
-        message: 'Order made success'
+        message: 'Order made success',
+        order
     });
 });
 

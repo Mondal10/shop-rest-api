@@ -1,9 +1,32 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+
 const app = express();
 
 const productRoutes = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
 
+// Extract json and makes easily readible
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+// Header setup for Cross Origin Access
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+
+    if (req.method == 'OPTIONS') {
+        res.header('Access-Control-Allow-Methods', 'GET, POST, PATCH, PUT, DELETE');
+
+        return res.status(200).json({});
+    }
+
+    // So that it won't block the incoming request
+    // and go through other routes
+    next();
+});
+
+// Routes
 app.use('/products', productRoutes);
 app.use('/orders', orderRoutes);
 
