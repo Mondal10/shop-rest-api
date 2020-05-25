@@ -40,7 +40,7 @@ router.patch('/:productId', (req, res, next) => {
     });
 });
 
-// DELETE or update a product
+// DELETE a product
 router.delete('/:productId', (req, res, next) => {
     const id = req.params.productId;
 
