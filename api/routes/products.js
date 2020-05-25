@@ -10,7 +10,7 @@ router.get('/', (req, res, next) => {
 
 // Handle POST requests on /products route
 router.post('/', (req, res, next) => {
-    res.status(200).json({
+    res.status(201).json({
         message: 'Handle POST request Here are your products at /products'
     });
 });
