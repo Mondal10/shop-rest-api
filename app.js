@@ -1,10 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const app = express();
 
 const productRoutes = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
+
+// Connecting to MongoDB
+mongoose.connect(`mongodb+srv://admin:${process.env.MONGO_ATLAS_PSWD}@cluster0-j6p5m.mongodb.net/test?retryWrites=true&w=majority`, {
+    useMongoClient: true
+});
 
 // Extract json and makes easily readible
 app.use(bodyParser.urlencoded({ extended: false }));
