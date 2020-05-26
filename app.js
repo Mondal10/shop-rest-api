@@ -9,7 +9,8 @@ const orderRoutes = require('./api/routes/orders');
 
 // Connecting to MongoDB
 mongoose.connect(`mongodb+srv://admin:${process.env.MONGO_ATLAS_PSWD}@cluster0-j6p5m.mongodb.net/test?retryWrites=true&w=majority`, {
-    useMongoClient: true
+    useNewUrlParser: true,
+    useUnifiedTopology: true
 });
 
 // Extract json and makes easily readible
