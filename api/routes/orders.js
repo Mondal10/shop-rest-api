@@ -12,6 +12,7 @@ router.get('/', (req, res, next) => {
 
     Order.find()
         .select('_id product quantity') // select only needed fields(columns)
+        .populate('product', 'name') // passing the reference which auto populates its data based on second argument
         .exec()
         .then(docs => {
             const response = {
@@ -82,6 +83,7 @@ router.get('/:orderId', (req, res, next) => {
 
     Order.findById(id)
         .select('_id product quantity')
+        .populate('product') // passing the reference which auto populates its data
         .exec()
         .then(order => {
             if (!order) {
