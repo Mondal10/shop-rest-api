@@ -51,6 +51,46 @@ router.post('/signup', (req, res, next) => {
         })
 });
 
+router.post('/login', (req, res, next) => {
+    const { email, password } = req.body;
+
+    User.find({ email })
+        .exec()
+        .then(user => {
+            if (!user.length) {
+                // Better to send 401 then 404 to avoid filtering(emails) in bruteforce attack
+                return res.status(401).json({
+                    message: 'Authentication Failed'
+                });
+            }
+
+            bcrypt.compare(password, user[0].password, (err, result) => {
+                if (err) {
+                    // Better to send 401 then 404 to avoid filtering(emails) in bruteforce attack
+                    return res.status(401).json({
+                        message: 'Authentication Failed'
+                    });
+                }
+
+                // result will always be a boolean as per documentation of bcrypt
+                if (result) {
+                    return res.status(200).json({
+                        message: 'Authenticated Successfully'
+                    });
+                }
+
+                // When password is incorrect
+                return res.status(401).json({
+                    message: 'Authentication Failed'
+                });
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({ error: err });
+        });
+});
+
 router.delete('/:userId', (req, res, next) => {
     const id = req.params.userId;
 
