@@ -5,8 +5,9 @@ const jwt = require('jsonwebtoken');
 const router = express.Router();
 
 const User = require('../models/user');
+const authentication = require('../middleware/authentication');
 
-router.get('/all', (req, res, next) => {
+router.get('/all', authentication, (req, res, next) => {
     User.find()
         .select('_id email') // select only needed fields(columns)
         .exec()
@@ -104,7 +105,7 @@ router.post('/login', (req, res, next) => {
         });
 });
 
-router.delete('/:userId', (req, res, next) => {
+router.delete('/:userId', authentication, (req, res, next) => {
     const id = req.params.userId;
 
     User.deleteOne({ _id: id })
