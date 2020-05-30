@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const router = express.Router();
 
 const User = require('../models/user');
@@ -54,17 +55,17 @@ router.post('/signup', (req, res, next) => {
 router.post('/login', (req, res, next) => {
     const { email, password } = req.body;
 
-    User.find({ email })
+    User.findOne({ email })
         .exec()
         .then(user => {
-            if (!user.length) {
+            if (!user) {
                 // Better to send 401 then 404 to avoid filtering(emails) in bruteforce attack
                 return res.status(401).json({
                     message: 'Authentication Failed'
                 });
             }
 
-            bcrypt.compare(password, user[0].password, (err, result) => {
+            bcrypt.compare(password, user.password, (err, result) => {
                 if (err) {
                     // Better to send 401 then 404 to avoid filtering(emails) in bruteforce attack
                     return res.status(401).json({
@@ -74,8 +75,20 @@ router.post('/login', (req, res, next) => {
 
                 // result will always be a boolean as per documentation of bcrypt
                 if (result) {
+                    const token = jwt.sign(
+                        {
+                            userId: user._id,
+                            email: user.email
+                        },
+                        process.env.JWT_SECRET,
+                        {
+                            expiresIn: "1h"
+                        }
+                    );
+
                     return res.status(200).json({
-                        message: 'Authenticated Successfully'
+                        message: 'Authenticated Successfully',
+                        token
                     });
                 }
 
