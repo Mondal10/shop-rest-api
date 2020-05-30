@@ -6,6 +6,7 @@ const app = express();
 
 const productRoutes = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
+const userRoutes = require('./api/routes/user');
 
 // Connecting to MongoDB
 mongoose.connect(`mongodb+srv://admin:${process.env.MONGO_ATLAS_PSWD}@cluster0-j6p5m.mongodb.net/test?retryWrites=true&w=majority`, {
@@ -36,6 +37,7 @@ app.use((req, res, next) => {
 // Routes
 app.use('/products', productRoutes);
 app.use('/orders', orderRoutes);
+app.use('/user', userRoutes);
 
 // Handle 404 error
 app.use('/', (req, res, next) => {
